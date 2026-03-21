@@ -10,15 +10,15 @@ A smart Chrome extension that automatically classifies, prioritizes, detects spa
 
 | Feature | Description |
 |--------|-------------|
-| 🔍 **Auto Scan Inbox** | Scans up to 20 Gmail emails at once and classifies each one |
-| 📧 **Scan Open Email** | Instantly analyze any email you have open in Gmail |
-| 🎯 **Intent Detection** | Classifies emails as Scheduling Request, Update Request, or Other |
-| 🔴 **Smart Priority** | Assigns Urgent / Normal / Low priority to every email |
-| 🚨 **Spam & Phishing Detector** | Flags suspicious emails with reason explanation |
-| ✉️ **Auto Reply Drafts** | Generates a professional reply draft for each email |
-| 🏷️ **Gmail Badges** | Injects color-coded labels directly into your Gmail inbox rows |
-| 📊 **Dashboard** | Live stats showing total, urgent, spam, and meeting counts |
-| 🔒 **100% Private** | All AI runs locally — only metadata stored, email body never saved |
+|  **Auto Scan Inbox** | Scans up to 20 Gmail emails at once and classifies each one |
+|  **Scan Open Email** | Instantly analyze any email you have open in Gmail |
+|  **Intent Detection** | Classifies emails as Scheduling Request, Update Request, or Other |
+|  **Smart Priority** | Assigns Urgent / Normal / Low priority to every email |
+|  **Spam & Phishing Detector** | Flags suspicious emails with reason explanation |
+|  **Auto Reply Drafts** | Generates a professional reply draft for each email |
+|  **Gmail Badges** | Injects color-coded labels directly into your Gmail inbox rows |
+|  **Dashboard** | Live stats showing total, urgent, spam, and meeting counts |
+|  **100% Private** | All AI runs locally — only metadata stored, email body never saved |
 
 ---
 
@@ -95,7 +95,7 @@ OLLAMA_ORIGINS=* ollama serve
 
 ---
 
-## 📖 How to Use
+##  How to Use
 
 ### Method 1 — Scan Your Inbox
 1. Open **[Gmail](https://mail.google.com)** in Chrome
@@ -169,7 +169,7 @@ This extension was built with privacy as the top priority:
 
 | Model | Size | Speed | Quality |
 |-------|------|-------|---------|
-| `llama3` ⭐ | ~4 GB | Medium | Best |
+| `llama3`  | ~4 GB | Medium | Best |
 | `mistral` | ~4 GB | Fast | Great |
 | `llama3.2` | ~2 GB | Fast | Good |
 | `gemma2` | ~5 GB | Medium | Great |
@@ -182,13 +182,13 @@ This extension was built with privacy as the top priority:
 ##  Contributing
 
 Contributions are welcome! Feel free to:
-- 🐛 Report bugs via [Issues](../../issues)
-- 💡 Suggest features via [Issues](../../issues)
-- 🔧 Submit improvements via [Pull Requests](../../pulls)
+-  Report bugs via [Issues](../../issues)
+-  Suggest features via [Issues](../../issues)
+-  Submit improvements via [Pull Requests](../../pulls)
 
 ---
 
-## 📄 License
+##  License
 
 MIT License — free to use, modify, and distribute.
 
