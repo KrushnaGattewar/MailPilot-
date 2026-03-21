@@ -1,0 +1,15 @@
+/* AI Email Manager — Gmail overlay styles */
+.ai-email-badge {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #fff;
+  margin-left: 6px;
+  vertical-align: middle;
+  white-space: nowrap;
+  font-family: 'Google Sans', Roboto, sans-serif;
+  opacity: 0.93;
+  pointer-events: none;
+}

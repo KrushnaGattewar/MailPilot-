@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>AI Email Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0b0b12;--s1:#12121e;--s2:#191928;--s3:#1f1f32;
+      --border:rgba(255,255,255,0.07);--accent:#7c3aed;--accent2:#4f46e5;
+      --glow:rgba(124,58,237,0.3);--text:#e2e8f0;--muted:#64748b;--sub:#94a3b8;
+      --green:#10b981;--yellow:#f59e0b;--red:#ef4444;--blue:#3b82f6;
+    }
+    body{width:420px;min-height:560px;background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--text);overflow-x:hidden;}
+
+    /* ── HEADER ── */
+    .hdr{background:linear-gradient(135deg,#150a2e,#0b0b18);padding:14px 16px 12px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+    .hdr::after{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;background:radial-gradient(circle,rgba(124,58,237,0.25),transparent 70%);pointer-events:none;}
+    .hdr-top{display:flex;align-items:center;justify-content:space-between;}
+    .logo{display:flex;align-items:center;gap:9px;}
+    .logo-ico{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 0 14px var(--glow);}
+    .logo-name{font-family:'Syne',sans-serif;font-weight:800;font-size:13px;color:#f1f5f9;}
+    .logo-sub{font-size:9px;color:var(--muted);margin-top:1px;}
+    .hdr-right{display:flex;align-items:center;gap:6px;}
+    .pill{display:flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:9px;font-weight:600;}
+    .pill.on{background:rgba(16,185,129,0.15);color:#6ee7b7;border:1px solid rgba(16,185,129,0.25);}
+    .pill.off{background:rgba(239,68,68,0.15);color:#fca5a5;border:1px solid rgba(239,68,68,0.25);}
+    .dot{width:5px;height:5px;border-radius:50%;}
+    .pill.on .dot{background:var(--green);animation:blink 2s infinite;}
+    .pill.off .dot{background:var(--red);}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+    /* ── TABS ── */
+    .tabs{display:flex;background:var(--s1);border-bottom:1px solid var(--border);}
+    .tab{flex:1;padding:9px 4px;text-align:center;font-size:10px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;text-transform:uppercase;letter-spacing:.04em;}
+    .tab.active{color:#a78bfa;border-bottom-color:var(--accent);background:rgba(124,58,237,0.05);}
+
+    /* ── DASHBOARD ── */
+    .dash{padding:14px;}
+
+    /* Stats row */
+    .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;}
+    .stat-card{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:10px 8px;text-align:center;transition:transform .2s;}
+    .stat-card:hover{transform:translateY(-1px);}
+    .stat-num{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;line-height:1;}
+    .stat-lbl{font-size:9px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.05em;}
+
+    /* Category breakdown */
+    .section-title{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;font-weight:600;margin-bottom:8px;}
+    .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:14px;}
+    .cat-card{background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:9px 11px;display:flex;align-items:center;justify-content:space-between;}
+    .cat-left{display:flex;align-items:center;gap:7px;}
+    .cat-icon{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;}
+    .cat-name{font-size:11px;font-weight:600;color:var(--text);}
+    .cat-sub{font-size:9px;color:var(--muted);}
+    .cat-num{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;}
+
+    /* Scan button */
+    .scan-row{display:flex;gap:8px;margin-bottom:14px;}
+    .btn{padding:8px 14px;border-radius:9px;border:none;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;display:flex;align-items:center;gap:5px;}
+    .btn-primary{flex:1;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 0 12px var(--glow);justify-content:center;}
+    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 0 18px var(--glow);}
+    .btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+    .btn-sm{background:var(--s2);color:var(--sub);border:1px solid var(--border);padding:8px 12px;}
+    .btn-sm:hover{border-color:rgba(255,255,255,.15);color:var(--text);}
+    .btn-danger{background:rgba(239,68,68,.12);color:#fca5a5;border:1px solid rgba(239,68,68,.2);}
+
+    /* Progress bar */
+    .progress-wrap{background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:10px;margin-bottom:14px;display:none;}
+    .progress-label{font-size:10px;color:var(--sub);margin-bottom:6px;display:flex;justify-content:space-between;}
+    .progress-bar{height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;}
+    .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;transition:width .3s;}
+
+    /* Last scan */
+    .last-scan{font-size:9px;color:var(--muted);text-align:center;margin-bottom:10px;}
+
+    /* ── EMAIL LIST ── */
+    .list-wrap{padding:0 14px 14px;}
+    .filter-row{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;}
+    .filter-btn{padding:3px 10px;border-radius:12px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--s2);color:var(--muted);font-family:'DM Sans',sans-serif;transition:all .2s;}
+    .filter-btn.active{background:rgba(124,58,237,.2);color:#c4b5fd;border-color:rgba(124,58,237,.4);}
+    .email-list{display:flex;flex-direction:column;gap:7px;max-height:340px;overflow-y:auto;}
+    .email-list::-webkit-scrollbar{width:3px;}
+    .email-list::-webkit-scrollbar-thumb{background:rgba(124,58,237,.3);border-radius:2px;}
+    .email-item{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;cursor:pointer;transition:all .2s;}
+    .email-item:hover{border-color:rgba(124,58,237,.3);background:var(--s3);}
+    .email-item.selected{border-color:rgba(124,58,237,.6);background:var(--s3);}
+    .ei-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+    .ei-sender{font-size:11px;font-weight:600;color:var(--text);}
+    .ei-time{font-size:9px;color:var(--muted);}
+    .ei-subject{font-size:11px;color:var(--sub);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .ei-tags{display:flex;gap:4px;flex-wrap:wrap;}
+    .etag{font-size:9px;padding:2px 6px;border-radius:6px;font-weight:600;}
+    .etag-urgent{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.25);}
+    .etag-normal{background:rgba(245,158,11,.15);color:#fcd34d;border:1px solid rgba(245,158,11,.25);}
+    .etag-low{background:rgba(16,185,129,.15);color:#6ee7b7;border:1px solid rgba(16,185,129,.25);}
+    .etag-spam{background:rgba(239,68,68,.25);color:#fca5a5;border:1px solid rgba(239,68,68,.4);}
+    .etag-sched{background:rgba(124,58,237,.15);color:#c4b5fd;border:1px solid rgba(124,58,237,.3);}
+    .etag-update{background:rgba(59,130,246,.15);color:#93c5fd;border:1px solid rgba(59,130,246,.3);}
+    .etag-other{background:rgba(100,116,139,.15);color:#94a3b8;border:1px solid rgba(100,116,139,.3);}
+    .empty-state{text-align:center;padding:28px 20px;color:var(--muted);font-size:12px;}
+    .empty-icon{font-size:30px;margin-bottom:8px;}
+
+    /* ── REPLY PANEL ── */
+    .reply-wrap{padding:14px;}
+    .reply-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+    .reply-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--text);}
+    .back-btn{font-size:10px;padding:4px 10px;border-radius:7px;background:var(--s2);color:var(--sub);border:1px solid var(--border);cursor:pointer;font-family:'DM Sans',sans-serif;}
+    .reply-meta{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:10px;}
+    .reply-meta-row{display:flex;gap:6px;align-items:center;margin-bottom:4px;font-size:11px;}
+    .reply-meta-row:last-child{margin-bottom:0;}
+    .meta-label{color:var(--muted);font-size:10px;width:52px;flex-shrink:0;}
+    .meta-val{color:var(--sub);}
+    .intent-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:14px;font-size:10px;font-weight:700;margin-bottom:10px;}
+    .analysis-box{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:10px;}
+    .analysis-title{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;font-weight:600;}
+    .analysis-row{display:flex;gap:6px;font-size:11px;color:var(--sub);margin-bottom:3px;align-items:flex-start;}
+    .analysis-key{color:var(--muted);width:68px;flex-shrink:0;font-size:10px;}
+    .spam-warning{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:10px;margin-bottom:10px;font-size:11px;color:#fca5a5;line-height:1.5;}
+    .reply-card{background:var(--s2);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+    .reply-card-hdr{padding:8px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(124,58,237,.08);}
+    .reply-card-title{font-size:9px;color:#a78bfa;font-weight:600;text-transform:uppercase;letter-spacing:.06em;}
+    .copy-btn{font-size:10px;padding:3px 9px;border-radius:6px;background:rgba(124,58,237,.2);color:#c4b5fd;border:1px solid rgba(124,58,237,.3);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;transition:all .2s;}
+    .copy-btn:hover{background:rgba(124,58,237,.35);}
+    .copy-btn.copied{background:rgba(16,185,129,.2);color:#6ee7b7;border-color:rgba(16,185,129,.3);}
+    .subj-line{padding:6px 12px;font-size:11px;color:var(--sub);border-bottom:1px solid var(--border);}
+    .reply-body{padding:10px 12px;font-size:11px;color:#cbd5e1;line-height:1.7;white-space:pre-wrap;max-height:180px;overflow-y:auto;}
+    .reply-body::-webkit-scrollbar{width:3px;}
+    .reply-body::-webkit-scrollbar-thumb{background:rgba(124,58,237,.3);border-radius:2px;}
+
+    /* ── SETTINGS ── */
+    .settings-wrap{padding:14px;}
+    .setting-group{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px;}
+    .sg-title{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;font-weight:600;margin-bottom:10px;}
+    .sg-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+    .sg-row:last-child{margin-bottom:0;}
+    .sg-label{font-size:12px;color:var(--text);}
+    .sg-sub{font-size:10px;color:var(--muted);margin-top:1px;}
+    select{background:var(--s3);border:1px solid var(--border);border-radius:7px;padding:5px 9px;color:var(--text);font-size:11px;outline:none;font-family:'DM Sans',sans-serif;cursor:pointer;}
+    .toggle{width:36px;height:20px;background:var(--border);border-radius:10px;cursor:pointer;position:relative;transition:background .2s;border:none;flex-shrink:0;}
+    .toggle.on{background:var(--accent);}
+    .toggle::after{content:'';position:absolute;width:14px;height:14px;background:#fff;border-radius:50%;top:3px;left:3px;transition:left .2s;}
+    .toggle.on::after{left:19px;}
+    .privacy-box{background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2);border-radius:9px;padding:10px;font-size:10.5px;color:#6ee7b7;line-height:1.6;}
+
+    /* ── SPINNER ── */
+    .spin{display:inline-block;width:10px;height:10px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:rot .6s linear infinite;}
+    @keyframes rot{to{transform:rotate(360deg)}}
+
+    /* ── ERROR ── */
+    .err-box{padding:9px 12px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);border-radius:8px;font-size:11px;color:#fca5a5;margin-top:8px;line-height:1.5;}
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="logo">
+      <div class="logo-ico">📬</div>
+      <div>
+        <div class="logo-name">AI Email Manager</div>
+        <div class="logo-sub">Local AI · Zero Cost · Private</div>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <div class="pill off" id="ollamaStatus">
+        <div class="dot"></div>
+        <span id="ollamaText">Checking...</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" data-tab="dashboard">📊 Dashboard</div>
+  <div class="tab" data-tab="emails">📧 Emails</div>
+  <div class="tab" data-tab="reply">✉️ Reply</div>
+  <div class="tab" data-tab="settings">⚙️ Settings</div>
+</div>
+
+<!-- ── DASHBOARD TAB ── -->
+<div id="pane-dashboard" class="dash">
+
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-num" id="st-total" style="color:#a78bfa">0</div><div class="stat-lbl">Total</div></div>
+    <div class="stat-card"><div class="stat-num" id="st-urgent" style="color:#f87171">0</div><div class="stat-lbl">Urgent</div></div>
+    <div class="stat-card"><div class="stat-num" id="st-spam" style="color:#fb923c">0</div><div class="stat-lbl">Spam</div></div>
+    <div class="stat-card"><div class="stat-num" id="st-sched" style="color:#c4b5fd">0</div><div class="stat-lbl">Meetings</div></div>
+  </div>
+
+  <div class="section-title">Priority Breakdown</div>
+  <div class="cat-grid">
+    <div class="cat-card">
+      <div class="cat-left"><div class="cat-icon" style="background:rgba(239,68,68,.15)">🔴</div><div><div class="cat-name">Urgent</div><div class="cat-sub">Needs attention</div></div></div>
+      <div class="cat-num" id="cb-urgent" style="color:#f87171">0</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-left"><div class="cat-icon" style="background:rgba(245,158,11,.15)">🟡</div><div><div class="cat-name">Normal</div><div class="cat-sub">Regular emails</div></div></div>
+      <div class="cat-num" id="cb-normal" style="color:#fcd34d">0</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-left"><div class="cat-icon" style="background:rgba(16,185,129,.15)">🟢</div><div><div class="cat-name">Low</div><div class="cat-sub">Can wait</div></div></div>
+      <div class="cat-num" id="cb-low" style="color:#6ee7b7">0</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-left"><div class="cat-icon" style="background:rgba(239,68,68,.2)">🚨</div><div><div class="cat-name">Spam</div><div class="cat-sub">Suspicious</div></div></div>
+      <div class="cat-num" id="cb-spam" style="color:#fca5a5">0</div>
+    </div>
+  </div>
+
+  <div class="section-title">Intent Breakdown</div>
+  <div class="cat-grid">
+    <div class="cat-card">
+      <div class="cat-left"><div class="cat-icon" style="background:rgba(124,58,237,.15)">📅</div><div><div class="cat-name">Scheduling</div><div class="cat-sub">Meeting requests</div></div></div>
+      <div class="cat-num" id="cb-sched" style="color:#c4b5fd">0</div>
+    </div>
+    <div class="cat-card">
+      <div class="cat-left"><div class="cat-icon" style="background:rgba(59,130,246,.15)">📋</div><div><div class="cat-name">Updates</div><div class="cat-sub">Status reports</div></div></div>
+      <div class="cat-num" id="cb-update" style="color:#93c5fd">0</div>
+    </div>
+  </div>
+
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-label"><span id="progressLabel">Scanning emails...</span><span id="progressCount">0/0</span></div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+
+  <div class="scan-row">
+    <button class="btn btn-primary" id="scanBtn">🔍 Scan Inbox</button>
+    <button class="btn btn-sm" id="scanOpenBtn">📧 Scan Open Email</button>
+    <button class="btn btn-sm btn-danger" id="clearBtn">🗑</button>
+  </div>
+
+  <div class="last-scan" id="lastScan">No scan yet</div>
+  <div id="dashError"></div>
+</div>
+
+<!-- ── EMAILS TAB ── -->
+<div id="pane-emails" style="display:none;">
+  <div class="list-wrap">
+    <div class="filter-row">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="URGENT">🔴 Urgent</button>
+      <button class="filter-btn" data-filter="NORMAL">🟡 Normal</button>
+      <button class="filter-btn" data-filter="LOW">🟢 Low</button>
+      <button class="filter-btn" data-filter="spam">🚨 Spam</button>
+      <button class="filter-btn" data-filter="SCHEDULING_REQUEST">📅 Meetings</button>
+    </div>
+    <div class="email-list" id="emailList">
+      <div class="empty-state"><div class="empty-icon">📭</div><div>No emails scanned yet.<br/>Go to <strong>Dashboard</strong> and click <strong>Scan Inbox</strong>.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── REPLY TAB ── -->
+<div id="pane-reply" style="display:none;">
+  <div class="reply-wrap" id="replyWrap">
+    <div class="empty-state"><div class="empty-icon">✉️</div><div>Select an email from the <strong>Emails</strong> tab<br/>to view its AI-drafted reply.</div></div>
+  </div>
+</div>
+
+<!-- ── SETTINGS TAB ── -->
+<div id="pane-settings" style="display:none;">
+  <div class="settings-wrap">
+    <div class="setting-group">
+      <div class="sg-title">AI Model</div>
+      <div class="sg-row">
+        <div><div class="sg-label">Ollama Model</div><div class="sg-sub">Used for all analysis</div></div>
+        <select id="modelSelect">
+          <option value="llama3">llama3</option>
+          <option value="mistral">mistral</option>
+          <option value="llama3.2">llama3.2</option>
+          <option value="gemma2">gemma2</option>
+          <option value="phi3">phi3</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="setting-group">
+      <div class="sg-title">Storage</div>
+      <div class="sg-row">
+        <div><div class="sg-label">Max emails stored</div><div class="sg-sub">Metadata only (no body)</div></div>
+        <select id="maxStore">
+          <option value="50">50</option>
+          <option value="100" selected>100</option>
+          <option value="200">200</option>
+        </select>
+      </div>
+      <div class="sg-row">
+        <div><div class="sg-label">Clear all data</div><div class="sg-sub">Removes all stored records</div></div>
+        <button class="btn btn-sm btn-danger" id="clearDataBtn" style="padding:5px 10px;font-size:10px;">Clear</button>
+      </div>
+    </div>
+
+    <div class="setting-group">
+      <div class="sg-title">Privacy</div>
+      <div class="privacy-box">
+        🔒 <strong>Your data never leaves your device.</strong><br/>
+        All AI processing runs locally via Ollama.<br/>
+        Only email metadata is stored (sender, subject, category).<br/>
+        Email body is processed in memory and immediately discarded.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>
