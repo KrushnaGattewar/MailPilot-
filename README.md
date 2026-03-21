@@ -22,12 +22,6 @@ A smart Chrome extension that automatically classifies, prioritizes, detects spa
 
 ---
 
-## 🖥️ Screenshots
-
-> *(Add your own screenshots here after installation)*
-
----
-
 ## 🚀 Installation Guide
 
 ### Prerequisites
