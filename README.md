@@ -1,4 +1,4 @@
-# 📬 AI Email Manager — Chrome Extension
+#  AI Email Manager — Chrome Extension
 
 > **100% Free · Powered by Local AI (Ollama) · Zero Data Leaves Your Device**
 
@@ -6,7 +6,7 @@ A smart Chrome extension that automatically classifies, prioritizes, detects spa
 
 ---
 
-## ✨ Features
+##  Features
 
 | Feature | Description |
 |--------|-------------|
@@ -22,7 +22,7 @@ A smart Chrome extension that automatically classifies, prioritizes, detects spa
 
 ---
 
-## 🚀 Installation Guide
+##  Installation Guide
 
 ### Prerequisites
 - Google Chrome browser
@@ -119,7 +119,7 @@ OLLAMA_ORIGINS=* ollama serve
 
 ---
 
-## 🏗️ Project Structure
+##  Project Structure
 
 ```
 email-manager-extension/
@@ -138,7 +138,7 @@ email-manager-extension/
 
 ---
 
-## 🔒 Privacy & Security
+##  Privacy & Security
 
 This extension was built with privacy as the top priority:
 
@@ -151,7 +151,7 @@ This extension was built with privacy as the top priority:
 
 ---
 
-## 🛠️ Troubleshooting
+##  Troubleshooting
 
 | Problem | Solution |
 |--------|---------|
@@ -165,7 +165,7 @@ This extension was built with privacy as the top priority:
 
 ---
 
-## ⚙️ Supported AI Models
+##  Supported AI Models
 
 | Model | Size | Speed | Quality |
 |-------|------|-------|---------|
@@ -179,7 +179,7 @@ This extension was built with privacy as the top priority:
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions are welcome! Feel free to:
 - 🐛 Report bugs via [Issues](../../issues)
@@ -194,7 +194,7 @@ MIT License — free to use, modify, and distribute.
 
 ---
 
-## 🙏 Acknowledgements
+##  Acknowledgements
 
 - [Ollama](https://ollama.com) — for making local AI models accessible
 - [Meta LLaMA](https://llama.meta.com) — for the open-source LLaMA models
@@ -204,7 +204,6 @@ MIT License — free to use, modify, and distribute.
 
 <div align="center">
 
-**Built with ❤️ · Powered by Local AI · Zero Cost · Zero Cloud**
 
 ⭐ If you find this useful, please give it a star on GitHub!
 
